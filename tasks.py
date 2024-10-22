@@ -20,10 +20,13 @@ def order_robots_from_RobotSpareBin():
     open_robot_order_website()
     orders = get_orders()
 
-    for row in orders:
-        print(row)
-
     close_annoying_modal()
+
+    for row in orders:
+        fill_the_form(row)
+
+
+    
 
 def open_robot_order_website():
     # Getting the robot to open the correct website
@@ -40,3 +43,11 @@ def close_annoying_modal():
     # Get's rid of the popup on the site
     page = browser.page()
     page.click("button:text('OK')")
+
+def fill_the_form(order):
+    # Fills the form with data from orders.csv
+    page = browser.page()
+    page.select_option("select#head", value=order['Head'])
+    # TODO: Find out how to get radio buttons properly checked
+    id_body = "id-body-" + order['Body']
+    page.set_checked(f"id:{id_body}", checked=True)
