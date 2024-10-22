@@ -23,6 +23,8 @@ def order_robots_from_RobotSpareBin():
     for row in orders:
         print(row)
 
+    close_annoying_modal()
+
 def open_robot_order_website():
     # Getting the robot to open the correct website
     browser.goto("https://robotsparebinindustries.com/#/robot-order")
@@ -33,3 +35,8 @@ def get_orders():
     http.download(url="https://robotsparebinindustries.com/orders.csv", target_file="output/orders.csv", overwrite=True)
     ordertable = Tables().read_table_from_csv("output/orders.csv", columns=["Order number", "Head", "Body", "Legs", "Address"])
     return ordertable
+
+def close_annoying_modal():
+    # Get's rid of the popup on the site
+    page = browser.page()
+    page.click("button:text('OK')")
