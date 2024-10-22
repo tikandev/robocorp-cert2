@@ -20,6 +20,9 @@ def order_robots_from_RobotSpareBin():
     open_robot_order_website()
     orders = get_orders()
 
+    for row in orders:
+        print(row)
+
 def open_robot_order_website():
     # Getting the robot to open the correct website
     browser.goto("https://robotsparebinindustries.com/#/robot-order")
