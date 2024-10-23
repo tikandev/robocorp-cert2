@@ -68,6 +68,7 @@ def submit_the_form(order):
         order_another = page.query_selector("button:text('ORDER ANOTHER ROBOT')")
         if order_another:
             store_receipt_as_pdf(order)
+            screenshot_robot(order)
             order_another_robot()
             close_annoying_modal()
             break
@@ -80,3 +81,11 @@ def store_receipt_as_pdf(order_number):
     pdf_path = f"output/receipts/order_receipt{order_number['Order number']}.pdf"
     pdf.html_to_pdf(order_confirmation_html, pdf_path)
     return pdf_path
+
+def screenshot_robot(order_number):
+    # Takes a screenshot of the ordered robot
+    page = browser.page()
+    robot_picture = page.locator("#robot-preview-image")
+    screenshot_path = f"output/screenshots/screenshot{order_number['Order number']}.png"
+    robot_picture.screenshot(path=screenshot_path)
+    return screenshot_path
