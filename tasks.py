@@ -48,6 +48,7 @@ def fill_the_form(order):
     # Fills the form with data from orders.csv
     page = browser.page()
     page.select_option("select#head", value=order['Head'])
-    # TODO: Find out how to get radio buttons properly checked
     id_body = "id-body-" + order['Body']
-    page.set_checked(f"id:{id_body}", checked=True)
+    page.set_checked(f"#{id_body}", checked=True)
+    page.get_by_placeholder("Enter the part number for the legs").fill(value=order['Legs'])
+    page.fill("#address", value=order['Address'])
