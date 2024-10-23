@@ -52,3 +52,20 @@ def fill_the_form(order):
     page.set_checked(f"#{id_body}", checked=True)
     page.get_by_placeholder("Enter the part number for the legs").fill(value=order['Legs'])
     page.fill("#address", value=order['Address'])
+    submit_the_form()
+
+def order_another_robot():
+    # After completing the order the page loads again and changes. Finds the button to start the order process agains and clicks it
+    page = browser.page()
+    page.click("button:text('ORDER ANOTHER ROBOT')")
+
+def submit_the_form():
+    # Submits the filled form and handles exceptions
+    page = browser.page()
+    while True:
+        page.click("button:text('ORDER')")
+        order_another = page.query_selector("button:text('ORDER ANOTHER ROBOT')")
+        if order_another:
+            order_another_robot()
+            close_annoying_modal()
+            break
