@@ -3,6 +3,7 @@ from robocorp import browser
 
 from RPA.HTTP import HTTP
 from RPA.Tables import Tables
+from RPA.PDF import PDF
 
 @task
 def order_robots_from_RobotSpareBin():
@@ -52,20 +53,30 @@ def fill_the_form(order):
     page.set_checked(f"#{id_body}", checked=True)
     page.get_by_placeholder("Enter the part number for the legs").fill(value=order['Legs'])
     page.fill("#address", value=order['Address'])
-    submit_the_form()
+    submit_the_form(order)
 
 def order_another_robot():
     # After completing the order the page loads again and changes. Finds the button to start the order process agains and clicks it
     page = browser.page()
     page.click("button:text('ORDER ANOTHER ROBOT')")
 
-def submit_the_form():
+def submit_the_form(order):
     # Submits the filled form and handles exceptions
     page = browser.page()
     while True:
         page.click("button:text('ORDER')")
         order_another = page.query_selector("button:text('ORDER ANOTHER ROBOT')")
         if order_another:
+            store_receipt_as_pdf(order)
             order_another_robot()
             close_annoying_modal()
             break
+
+def store_receipt_as_pdf(order_number):
+    # Creates a pdf of the order confirmation pages receipt
+    page = browser.page()
+    order_confirmation_html = page.locator("#receipt").inner_html()
+    pdf = PDF()
+    pdf_path = f"output/receipts/order_receipt{order_number['Order number']}.pdf"
+    pdf.html_to_pdf(order_confirmation_html, pdf_path)
+    return pdf_path
